@@ -2742,7 +2742,9 @@ components:
           authorizationUrl: https://api.service.hmrc.gov.uk/oauth/authorize
           tokenUrl: https://api.service.hmrc.gov.uk/oauth/token
           refreshUrl: https://api.service.hmrc.gov.uk/oauth/refresh
-          scopes: { write:vat, read:vat }
+          scopes:
+            write:vat: Grants write access
+            read:vat: Grants read access
     applicationRestricted:
       type: oauth2
       description: |
@@ -2751,7 +2753,9 @@ components:
       flows:
         clientCredentials:
           tokenUrl: https://api.service.hmrc.gov.uk/oauth/token
-          scopes: { "write:vat", "read:vat" }
+          scopes:
+            write:vat: Grants write access
+            read:vat: Grants read access
 tags:
 - name: organisations
   description: ''
