@@ -2773,7 +2773,7 @@ components:
           scopes:
             write:vat: Grants write access
             read:vat: Grants read access
-    applicationRestricted:
+    Application-Restricted:
       type: oauth2
       description: |
         HMRC supports OAuth 2.0 for authenticating application restricted API requests using an OAuth 2.0 Bearer Token in the AUTHORIZATION header.
