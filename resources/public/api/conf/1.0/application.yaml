@@ -454,12 +454,12 @@ paths:
                 - $ref: '#/components/schemas/MTDFB-API56v1.0Submit9-BoxVatReturn-Successresponse'
                 - type: object
                   example:
-                    processingDate: 2018-01-16T08:20:27.895+0000
+                    processingDate: 2018-01-16T08:20:27.895+00:00
                     paymentIndicator: BANK
                     formBundleNumber: '256660290587'
                     chargeRefNumber: aCxFaNx0FZsCvyWF
               example:
-                processingDate: 2018-01-16T08:20:27.895+0000
+                processingDate: 2018-01-16T08:20:27.895+00:00
                 paymentIndicator: BANK
                 formBundleNumber: '256660290587'
                 chargeRefNumber: aCxFaNx0FZsCvyWF
