@@ -150,6 +150,7 @@ paths:
         schema:
           type: string
           example: '-'
+      - $ref: '#/components/parameters/acceptHeader'
       responses:
         '200':
           description: ''
@@ -357,6 +358,7 @@ paths:
         schema:
           type: string
           example: '-'
+      - $ref: '#/components/parameters/acceptHeader'
       requestBody:
         description: ''
         content:
@@ -606,6 +608,7 @@ paths:
         schema:
           type: string
           example: '-'
+      - $ref: '#/components/parameters/acceptHeader'
       responses:
         '200':
           description: ''
@@ -816,6 +819,7 @@ paths:
         schema:
           type: string
           example: '-'
+      - $ref: '#/components/parameters/acceptHeader'
       responses:
         '200':
           description: ''
@@ -1011,6 +1015,7 @@ paths:
         schema:
           type: string
           example: '-'
+      - $ref: '#/components/parameters/acceptHeader'
       responses:
         '200':
           description: ''
@@ -1192,6 +1197,7 @@ paths:
         schema:
           type: string
           example: '-'
+      - $ref: '#/components/parameters/acceptHeader'
       responses:
         '200':
           description: ''
@@ -1422,6 +1428,7 @@ paths:
         schema:
           type: string
           example: '-'
+      - $ref: '#/components/parameters/acceptHeader'
       responses:
         '200':
           description: ''
@@ -1624,6 +1631,7 @@ paths:
         schema:
           type: string
           example: '-'
+      - $ref: '#/components/parameters/acceptHeader'
       responses:
         '200':
           description: ''
@@ -1733,6 +1741,19 @@ paths:
         - User-Restricted: [ read:vat ]
       deprecated: false
 components:
+  parameters:
+    acceptHeader:
+      name: Accept
+      in: header
+      description:
+        Specifies the response format and the
+        [version](/api-documentation/docs/reference-guide#versioning) of the API
+        to be used.
+      required: true
+      schema:
+        type: string
+        enum:
+          - "application/vnd.hmrc.1.0+json"
   schemas:
     errorResponse:
       title: errorResponse
