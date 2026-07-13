@@ -37,7 +37,9 @@ trait VersionRoutingMap extends Logging {
   final def versionRouter(version: String): Option[Router] = map.get(version)
 }
 
-// Add routes corresponding to available versions...
+// Add switches and multiple routes files to the map in order to coordinate the go-live of new 3rd party endpoints, or control multiple versions of exposed endpoints.
+// After a new endpoint goes live, remove the switch and old route file to leave only long term version(s).
+// Currently no switches are in use and only one route file exists.
 case class VersionRoutingMapImpl @Inject()(defaultRouter: Router,
                                            v1Routes: v1.Routes,
                                            implicit val appConfig: AppConfig
@@ -46,7 +48,6 @@ case class VersionRoutingMapImpl @Inject()(defaultRouter: Router,
 
   val map: Map[String, Router] = Map(
     VERSION_1 -> {
-        infoLogMessage("[VersionRoutingMap][map] using v1Routes - pointing to new packages including penalties")
         v1Routes
     }
   )
