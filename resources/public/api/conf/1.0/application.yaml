@@ -291,7 +291,7 @@ paths:
                     code: RULE_INSOLVENT_TRADER
                     message: The remote endpoint has indicated that the Trader is insolvent
       security:
-        - userRestricted: [ read:vat ]
+        - User-Restricted: [ read:vat ]
       deprecated: false
   /organisations/vat/{vrn}/returns:
     post:
@@ -585,7 +585,7 @@ paths:
                     code: RULE_INSOLVENT_TRADER
                     message: The remote endpoint has indicated that the Trader is insolvent
       security:
-        - userRestricted: [ write:vat ]
+        - User-Restricted: [ write:vat ]
       deprecated: false
   /organisations/vat/{vrn}/returns/{periodKey}:
     get:
@@ -764,7 +764,7 @@ paths:
                     code: NOT_FOUND
                     message: The requested resource could not be found
       security:
-        - userRestricted: [ read:vat ]
+        - User-Restricted: [ read:vat ]
       deprecated: false
   /organisations/vat/{vrn}/liabilities:
     get:
@@ -955,7 +955,7 @@ paths:
                     code: RULE_INSOLVENT_TRADER
                     message: The remote endpoint has indicated that the Trader is insolvent
       security:
-        - userRestricted: [ read:vat ]
+        - User-Restricted: [ read:vat ]
       deprecated: false
   /organisations/vat/{vrn}/payments:
     get:
@@ -1136,7 +1136,7 @@ paths:
                     code: RULE_INSOLVENT_TRADER
                     message: The remote endpoint has indicated that the Trader is insolvent
       security:
-        - userRestricted: [ read:vat ]
+        - User-Restricted: [ read:vat ]
       deprecated: false
   /organisations/vat/{vrn}/penalties:
     get:
@@ -1390,7 +1390,7 @@ paths:
                     code: CLIENT_OR_AGENT_NOT_AUTHORISED
                     message: The client and/or agent is not authorised
       security:
-        - userRestricted: [ read:vat ]
+        - User-Restricted: [ read:vat ]
       deprecated: false
   /organisations/vat/{vrn}/financial-details/{penaltyChargeReference}:
     get:
@@ -1580,7 +1580,7 @@ paths:
                     code: CLIENT_OR_AGENT_NOT_AUTHORISED
                     message: The client and/or agent is not authorised
       security:
-        - userRestricted: [ read:vat ]
+        - User-Restricted: [ read:vat ]
       deprecated: false
   /organisations/vat/{vrn}/information:
     get:
@@ -1743,7 +1743,7 @@ paths:
                     code: NOT_FOUND
                     message: The requested resource could not be found
       security:
-        - userRestricted: [ read:vat ]
+        - User-Restricted: [ read:vat ]
       deprecated: false
 components:
   schemas:
@@ -2815,7 +2815,7 @@ components:
           example: true
       description: VAT Return Declaration
   securitySchemes:
-    userRestricted:
+    User-Restricted:
       type: oauth2
       description: |
         HMRC supports OAuth 2.0 for authenticating user restricted API requests using an OAuth 2.0 Bearer Token in the AUTHORIZATION header.
@@ -2826,7 +2826,7 @@ components:
           tokenUrl: https://api.service.hmrc.gov.uk/oauth/token
           refreshUrl: https://api.service.hmrc.gov.uk/oauth/refresh
           scopes: { write:vat, read:vat }
-    applicationRestricted:
+    Application-Restricted:
       type: oauth2
       description: |
         HMRC supports OAuth 2.0 for authenticating application restricted API requests using an OAuth 2.0 Bearer Token in the AUTHORIZATION header.
