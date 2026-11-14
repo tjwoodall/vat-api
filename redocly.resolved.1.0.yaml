@@ -170,10 +170,10 @@ paths:
               schema:
                 allOf:
                   - title: Obligations
-                    required: &ref_19
+                    required: &ref_21
                       - obligations
                     type: object
-                    properties: &ref_20
+                    properties: &ref_22
                       obligations:
                         type: array
                         items:
@@ -278,7 +278,7 @@ paths:
                         code: VRN_INVALID
                         message: The provided VRN is invalid
               examples:
-                invalidNino:
+                invalidVrn:
                   description: Invalid VRN
                   value:
                     code: VRN_INVALID
@@ -632,10 +632,43 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - title: errorResponse
-                    required: *ref_0
+                  - title: Submit400ErrorResponse
+                    required: &ref_4
+                      - code
+                      - message
                     type: object
-                    properties: *ref_1
+                    properties: &ref_5
+                      code:
+                        type: string
+                        description: The error code.
+                        example: VRN_INVALID
+                      message:
+                        type: string
+                        description: A human-readable description of the error.
+                        example: The provided VRN is invalid
+                      errors:
+                        type: array
+                        description: An array that is only present if error code INVALID_REQUEST is returned. It lists each field that failed validation.
+                        items:
+                          title: Submit400ErrorItem
+                          required:
+                            - code
+                            - message
+                            - path
+                          type: object
+                          properties:
+                            code:
+                              type: string
+                              description: The error code.
+                              example: INVALID_MONETARY_AMOUNT
+                            message:
+                              type: string
+                              description: A human-readable description of the error.
+                              example: Amount should be a monetary value (to 2 decimal places)
+                            path:
+                              type: string
+                              description: The name of the request field that is the focus of the error message.
+                              example: /vatDueSales
                   - example:
                       code: VRN_INVALID
                       message: The provided VRN is invalid
@@ -645,36 +678,77 @@ paths:
                   value:
                     code: VRN_INVALID
                     message: The provided VRN is invalid
+                invalidPeriodKey (wrong format):
+                  description: The value that was supplied for the period key was incorrectly formatted.
+                  value:
+                    code: INVALID_REQUEST
+                    message: Invalid request
+                    errors:
+                      - code: PERIOD_KEY_INVALID
+                        message: period key should be a 4 character string
+                        path: /periodKey
                 invalidPeriodKey:
                   description: Invalid period key
                   value:
                     code: PERIOD_KEY_INVALID
                     message: Invalid period key
-                invalidRequest:
-                  description: Invalid request
-                  value:
-                    code: INVALID_REQUEST
-                    message: Invalid request
                 invalidTotalValue:
                   description: totalVatDue should be equal to the sum of vatDueSales and vatDueAcquisitions
                   value:
-                    code: VAT_TOTAL_VALUE
-                    message: totalVatDue should be equal to the sum of vatDueSales and vatDueAcquisitions
+                    code: INVALID_REQUEST
+                    message: Invalid request
+                    errors:
+                      - code: VAT_TOTAL_VALUE
+                        message: totalVatDue should be equal to vatDueSales + vatDueAcquisitions
+                        path: /totalVatDue
                 invalidNetValue:
                   description: netVatDue should be the difference between the largest and the smallest values among totalVatDue and vatReclaimedCurrPeriod
                   value:
-                    code: VAT_NET_VALUE
-                    message: netVatDue should be the difference between the largest and the smallest values among totalVatDue and vatReclaimedCurrPeriod
+                    code: INVALID_REQUEST
+                    message: Invalid request
+                    errors:
+                      - code: VAT_NET_VALUE
+                        message: netVatDue should be the difference between the largest and the smallest values among totalVatDue and vatReclaimedCurrPeriod
+                        path: /netVatDue
                 invalidNumericValue:
-                  description: Please provide a numeric field
+                  description: The value that was supplied was not in a valid numeric format.
                   value:
-                    code: INVALID_NUMERIC_VALUE
-                    message: please provide a numeric field
+                    code: INVALID_REQUEST
+                    message: Invalid request
+                    errors:
+                      - code: INVALID_NUMERIC_VALUE
+                        message: please provide a numeric field
+                        path: /vatDueSales
                 invalidMonetaryAmount:
-                  description: The monetary amount is invalid
+                  description: A monetary amount is outside the permitted range or has more than 2 decimal places.
                   value:
-                    code: INVALID_MONETARY_AMOUNT
-                    message: amount should be a monetary value (to 2 decimal places), between 0 and 99,999,999,999.99
+                    code: INVALID_REQUEST
+                    message: Invalid request
+                    errors:
+                      - code: INVALID_MONETARY_AMOUNT
+                        message: amount should be a monetary value (to 2 decimal places), between 0 and 99,999,999,999.99
+                        path: /netVatDue
+                mandatoryFieldMissing:
+                  description: A mandatory field is missing.
+                  value:
+                    code: INVALID_REQUEST
+                    message: Invalid request
+                    errors:
+                      - code: MANDATORY_FIELD_MISSING
+                        message: a mandatory field is missing
+                        path: /totalVatDue
+                multipleValidationErrors:
+                  description: Multiple validation errors occurred.
+                  value:
+                    code: INVALID_REQUEST
+                    message: Invalid request
+                    errors:
+                      - code: VAT_NET_VALUE
+                        message: netVatDue should be the difference between the largest and the smallest values among totalVatDue and vatReclaimedCurrPeriod
+                        path: /netVatDue
+                      - code: VAT_TOTAL_VALUE
+                        message: totalVatDue should be equal to vatDueSales + vatDueAcquisitions
+                        path: /totalVatDue
         '403':
           description: ''
           headers: {}
@@ -913,7 +987,7 @@ paths:
                       code: VRN_INVALID
                       message: The provided VRN is invalid
               examples:
-                invalidNino:
+                invalidVrn:
                   description: The provided VRN is invalid
                   value:
                     code: VRN_INVALID
@@ -1075,19 +1149,19 @@ paths:
               schema:
                 allOf:
                   - title: Liabilities
-                    required: &ref_14
+                    required: &ref_16
                       - liabilities
                     type: object
-                    properties: &ref_15
+                    properties: &ref_17
                       liabilities:
                         type: array
                         items:
                           title: Liability
-                          required: &ref_16
+                          required: &ref_18
                             - type
                             - originalAmount
                           type: object
-                          properties: &ref_17
+                          properties: &ref_19
                             taxPeriod:
                               allOf:
                                 - title: TaxPeriod
@@ -1164,7 +1238,7 @@ paths:
                       code: VRN_INVALID
                       message: The provided VRN is invalid
               examples:
-                invalidNino:
+                invalidVrn:
                   description: Invalid VRN
                   value:
                     code: VRN_INVALID
@@ -1331,10 +1405,10 @@ paths:
               schema:
                 allOf:
                   - title: Payments
-                    required: &ref_21
+                    required: &ref_23
                       - payments
                     type: object
-                    properties: &ref_22
+                    properties: &ref_24
                       payments:
                         type: array
                         items:
@@ -1379,7 +1453,7 @@ paths:
                       code: VRN_INVALID
                       message: The provided VRN is invalid
               examples:
-                invalidNino:
+                invalidVrn:
                   description: Invalid VRN
                   value:
                     code: VRN_INVALID
@@ -1544,7 +1618,7 @@ paths:
                 allOf:
                   - title: Penalties
                     type: object
-                    properties: &ref_23
+                    properties: &ref_25
                       totalisations:
                         allOf:
                           - title: Totalisations
@@ -1583,11 +1657,11 @@ paths:
                       lateSubmissionPenalty:
                         allOf:
                           - title: LateSubmissionPenalty
-                            required: &ref_12
+                            required: &ref_14
                               - summary
                               - details
                             type: object
-                            properties: &ref_13
+                            properties: &ref_15
                               summary:
                                 allOf:
                                   - title: Summary
@@ -1638,7 +1712,7 @@ paths:
                                 type: array
                                 items:
                                   title: Detail
-                                  required: &ref_4
+                                  required: &ref_6
                                     - penaltyNumber
                                     - penaltyOrder
                                     - penaltyCategory
@@ -1646,7 +1720,7 @@ paths:
                                     - penaltyCreationDate
                                     - penaltyExpiryDate
                                   type: object
-                                  properties: &ref_5
+                                  properties: &ref_7
                                     penaltyNumber:
                                       type: string
                                       description: The unique identification number for the penalty.
@@ -1832,12 +1906,12 @@ paths:
                         allOf:
                           - title: LatePaymentPenalty
                             type: object
-                            properties: &ref_11
+                            properties: &ref_13
                               details:
                                 type: array
                                 items:
                                   title: Detail1
-                                  required: &ref_6
+                                  required: &ref_8
                                     - principalChargeReference
                                     - penaltyCategory
                                     - penaltyStatus
@@ -1848,7 +1922,7 @@ paths:
                                     - principalChargeBillingTo
                                     - principalChargeDueDate
                                   type: object
-                                  properties: &ref_7
+                                  properties: &ref_9
                                     principalChargeReference:
                                       type: string
                                       description: The reference for the principal charge upon which the late payment penalty is based. This is the original charge that was not paid on time (typically the VAT return charge reference).
@@ -2233,12 +2307,12 @@ paths:
                 allOf:
                   - title: FinancialDetails
                     type: object
-                    properties: &ref_9
+                    properties: &ref_11
                       totalisations:
                         allOf:
                           - title: Totalisations1
                             type: object
-                            properties: &ref_24
+                            properties: &ref_26
                               totalOverdue:
                                 type: number
                                 description: The charge amount that is overdue (collectable now). The value must be between -99999999999.99 and 99999999999.99 to 2 decimal places.
@@ -2281,7 +2355,7 @@ paths:
                         items:
                           title: DocumentDetail
                           type: object
-                          properties: &ref_8
+                          properties: &ref_10
                             postingDate:
                               type: string
                               description: The date that the charge was posted to the individual's or organisation's account.
@@ -2322,7 +2396,7 @@ paths:
                               items:
                                 title: LineItemDetail
                                 type: object
-                                properties: &ref_18
+                                properties: &ref_20
                                   chargeDescription:
                                     type: string
                                     description: Describes what the charge relates to.
@@ -2576,7 +2650,7 @@ paths:
                 allOf:
                   - title: Information
                     type: object
-                    properties: &ref_10
+                    properties: &ref_12
                       customerDetails:
                         allOf:
                           - title: CustomerDetails
@@ -2817,72 +2891,77 @@ paths:
       deprecated: false
 components:
   schemas:
-    Detail:
-      title: Detail
+    Submit400ErrorResponse:
+      title: Submit400ErrorResponse
       required: *ref_4
       type: object
       properties: *ref_5
-    Detail1:
-      title: Detail1
+    Detail:
+      title: Detail
       required: *ref_6
       type: object
       properties: *ref_7
+    Detail1:
+      title: Detail1
+      required: *ref_8
+      type: object
+      properties: *ref_9
     DocumentDetail:
       title: DocumentDetail
       type: object
-      properties: *ref_8
+      properties: *ref_10
     FinancialDetails:
       title: FinancialDetails
       type: object
-      properties: *ref_9
+      properties: *ref_11
     Information:
       title: Information
       type: object
-      properties: *ref_10
+      properties: *ref_12
     LatePaymentPenalty:
       title: LatePaymentPenalty
       type: object
-      properties: *ref_11
+      properties: *ref_13
       description: Information about the late payment penalties that HMRC has levied.
     LateSubmissionPenalty:
       title: LateSubmissionPenalty
-      required: *ref_12
-      type: object
-      properties: *ref_13
-      description: Information about the late submission penalties that HMRC has levied.
-    Liabilities:
-      title: Liabilities
       required: *ref_14
       type: object
       properties: *ref_15
-    Liability:
-      title: Liability
+      description: Information about the late submission penalties that HMRC has levied.
+    Liabilities:
+      title: Liabilities
       required: *ref_16
       type: object
       properties: *ref_17
+    Liability:
+      title: Liability
+      required: *ref_18
+      type: object
+      properties: *ref_19
       description: Liability
     LineItemDetail:
       title: LineItemDetail
       type: object
-      properties: *ref_18
+      properties: *ref_20
     Obligations:
       title: Obligations
-      required: *ref_19
-      type: object
-      properties: *ref_20
-    Payments:
-      title: Payments
       required: *ref_21
       type: object
       properties: *ref_22
+    Payments:
+      title: Payments
+      required: *ref_23
+      type: object
+      properties: *ref_24
     Penalties:
       title: Penalties
       type: object
-      properties: *ref_23
+      properties: *ref_25
     Totalisations1:
       title: Totalisations1
       type: object
-      properties: *ref_24
+      properties: *ref_26
       description: Totals that relate to the charge.
   securitySchemes:
     userRestricted:
